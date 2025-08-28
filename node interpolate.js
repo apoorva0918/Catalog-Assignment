@@ -1,14 +1,10 @@
 const fs = require('fs');
-
-// Helper: convert single digit (0-9a-z) to numeric value
 function digitToVal(ch) {
     if ('0' <= ch && ch <= '9') return ch.charCodeAt(0) - '0'.charCodeAt(0);
     else if ('a' <= ch && ch <= 'z') return ch.charCodeAt(0) - 'a'.charCodeAt(0) + 10;
     else if ('A' <= ch && ch <= 'Z') return ch.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
     else throw new Error('Invalid digit: ' + ch);
 }
-
-// Decode a numeric string in arbitrary base to BigInt
 function decodeBaseString(str, base) {
     let result = BigInt(0);
     const b = BigInt(base);
@@ -19,8 +15,6 @@ function decodeBaseString(str, base) {
     }
     return result;
 }
-
-// Read and decode points from a test input object
 function decodePoints(input) {
     const k = input.keys.k;
     let points = [];
@@ -40,11 +34,8 @@ function decodePoints(input) {
             points.push([x, y]);
         }
     }
-    // Use only first k points for interpolation
     return points.slice(0, k);
 }
-
-// Vandermonde matrix solver to find polynomial coefficients
 function solveVandermonde(points) {
     const n = points.length;
     const A = [];
@@ -73,10 +64,8 @@ function gaussianElimination(A, b) {
                 maxRow = k;
             }
         }
-        // Swap rows
         [A[i], A[maxRow]] = [A[maxRow], A[i]];
         [b[i], b[maxRow]] = [b[maxRow], b[i]];
-        // Eliminate lower rows
         for (let k = i + 1; k < n; k++) {
             const c = -A[k][i] / A[i][i];
             for (let j = i; j < n; j++) {
@@ -86,7 +75,6 @@ function gaussianElimination(A, b) {
             b[k] += c * b[i];
         }
     }
-    // Back substitution
     const x = Array(n).fill(0);
     for (let i = n - 1; i >= 0; i--) {
         x[i] = b[i] / A[i][i];
@@ -96,8 +84,6 @@ function gaussianElimination(A, b) {
     }
     return x;
 }
-
-// Main function to run polynomial interpolation on an input test case object
 function run(input, name) {
     try {
         const points = decodePoints(input);
@@ -112,10 +98,8 @@ function run(input, name) {
     }
 }
 
-// Read JSON files
 const testcase1 = JSON.parse(fs.readFileSync('testcase1.json', 'utf8'));
 const testcase2 = JSON.parse(fs.readFileSync('testcase2.json', 'utf8'));
-
-// Run solutions for both
 run(testcase1, "Testcase 1");
 run(testcase2, "Testcase 2");
+
